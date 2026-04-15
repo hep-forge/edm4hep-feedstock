@@ -1,0 +1,67 @@
+{% set versions = {
+    "1.0.0": "7bb76479883997ba39357b0db65d96d5f1201bc8a79b47866db8b44f76a231be"
+} %}
+{% set tags = {
+    "1.0.0": "v01-00"
+} %}
+
+{% set version = environ.get('COMMIT_VERSION', None) %}
+{% set version = version or versions.keys()|first %}
+{% set version = version|string %}
+{% set tag = tags.get(version, "v" + version) %}
+
+build:
+  number: 0
+  string: "root{{ root.replace('.', '') }}"
+  skip: true  # [win]
+
+package:
+  name: {{ environ.get('ANACONDA_PACKAGE', "edm4hep")|string|lower }}
+  version: {{ environ.get('ANACONDA_VERSION', version)|replace("-", ".") }}
+
+source:
+  url: https://github.com/key4hep/EDM4hep/archive/refs/tags/{{ tag }}.tar.gz
+  {% if versions.get(version, None) %}
+  sha256: {{ versions.get(version) }}
+  {% endif %}
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - {{ compiler('c') }}
+    - cmake
+    - make
+    - python
+  host:
+    - python
+    - podio
+    - root {{ root }}.*
+    - nlohmann_json
+  run:
+    - python
+    - podio
+    - root {{ root }}.*
+
+test:
+  commands:
+    - test -f ${PREFIX}/lib/libedm4hep.so        # [linux]
+    - test -f ${PREFIX}/lib/libedm4hep.dylib     # [osx]
+    - test -f ${PREFIX}/include/edm4hep/MCParticle.h
+
+about:
+  home: https://github.com/key4hep/EDM4hep
+  license: Apache-2.0
+  license_file: LICENSE
+  summary: "A generic event data model for future HEP collider experiments."
+  description: |
+    EDM4hep is a generic event data model for future HEP collider experiments.
+    It provides standardized data structures for organizing and managing particle
+    physics data across different detector systems, including components
+    (mathematical types), datatypes (physics objects like MCParticles, hits,
+    tracks, vertices), and associations between data objects. It is part of the
+    Key4hep software stack and built on top of PODIO.
+  dev_url: https://github.com/key4hep/EDM4hep
+
+extra:
+  recipe-maintainers:
+    - meiyasan
