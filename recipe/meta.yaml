@@ -9,6 +9,7 @@
 {% set version = version or versions.keys()|first %}
 {% set version = version|string %}
 {% set tag = tags.get(version, "v" + version) %}
+{% set root = root if root else "0" %}
 
 build:
   number: 0
@@ -31,16 +32,13 @@ requirements:
     - {{ compiler('c') }}
     - cmake
     - make
-    - python
   host:
-    - python
-    - podio
-    - root {{ root }}.*
-    - nlohmann_json
+    - podio * root{{ root.replace('.', '') }}
+    - jinja2
+    - pyaml
   run:
-    - python
-    - podio
-    - root {{ root }}.*
+    - podio * root{{ root.replace('.', '') }}
+    - pyaml
 
 test:
   commands:
