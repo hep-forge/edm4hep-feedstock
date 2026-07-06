@@ -13,7 +13,12 @@ A generic event data model for future HEP collider experiments.
 
 ## Architectures
 
-State per architecture: see the platforms badge above or [anaconda.org/hep-forge/edm4hep](https://anaconda.org/hep-forge/edm4hep).
+| Architecture | Latest published |
+|--------------|------------------|
+| linux-amd64 (`linux-64`) | ✅ `1.0.0` |
+| linux-arm64 (`linux-aarch64`) | ✅ `1.0.0` |
+
+_As of the last feedstock render; the badges above are live._
 
 
 ## Install
